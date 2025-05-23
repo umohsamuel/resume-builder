@@ -32,7 +32,7 @@ export default function ResumeForm() {
   };
 
   return (
-    <div className="max-w-4xl overflow-y-auto min-h-full h-full mx-auto p-6 bg-white">
+    <div className=" w-full lg:max-w-4xl overflow-y-auto min-h-full h-full mx-auto p-6 bg-white">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Resume Builder

@@ -8,7 +8,7 @@ export default function PreviewResume() {
   const resumeData = useFormStore((state) => state.resumeData);
 
   return (
-    <div className="w-full grid grid-cols-2 h-[calc(100vh-60px)] overflow-hidden">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-2 lg:h-[calc(100vh-60px)] lg:overflow-hidden">
       <ResumeForm />
       <ResumePreview resumeData={resumeData} />
     </div>
@@ -27,7 +27,8 @@ function ResumePreview({ resumeData }: { resumeData: ResumeData }) {
       width="100%"
       height="100%"
       key={key}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%" }}
+      className="h-[100vh] lg:h-full"
     >
       <ResumePDF data={resumeData} />
     </PDFViewer>
