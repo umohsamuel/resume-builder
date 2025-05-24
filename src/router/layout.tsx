@@ -19,7 +19,7 @@ export default function AppLayout() {
       signInForceRedirectUrl="/preview"
       afterSignInUrl="/preview"
     >
-      <div className="bg-white text-black">
+      <div className="bg-white text-black font-mono">
         <Outlet />
       </div>
     </ClerkProvider>

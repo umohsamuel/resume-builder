@@ -1,5 +1,8 @@
 import { Plus, Trash2 } from "lucide-react";
 import type { ArrayPath, FieldArrayWithId, FieldValues } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 
 interface DynamicArrayFieldProps<
   TFieldValues extends FieldValues,
@@ -32,31 +35,31 @@ export const DynamicArrayField = <
   fieldName,
   placeholder = "Enter item",
 }: DynamicArrayFieldProps<TFieldValues, TFieldName>) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium text-gray-700">{label}</label>
+  <div className="flex flex-col gap-2">
+    <Label className="text-sm font-medium text-gray-700">{label}</Label>
     {fields.map((field, index) => (
       <div key={field.id} className="flex gap-2">
-        <input
+        <Input
           {...register(`${fieldName}.${index}`)}
           placeholder={placeholder}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className=" h-[45px]"
         />
-        <button
+        <Button
           type="button"
           onClick={() => remove(index)}
-          className="px-3 py-2 text-red-600 hover:text-red-800"
+          className="px-3 py-2 "
         >
           <Trash2 size={16} />
-        </button>
+        </Button>
       </div>
     ))}
-    <button
+    <Button
       type="button"
       onClick={() => append("")}
-      className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-800"
+      className=" px-3 py-2 bg-transparent border mt-2 border-black border-solid h-[45px] text-black shadow-sm shadow-black"
     >
       <Plus size={16} /> Add {label.replace(/s$/, "")}
-    </button>
+    </Button>
     {errors?.message && (
       <p className="text-sm text-red-500">{errors.message}</p>
     )}

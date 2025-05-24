@@ -22,13 +22,24 @@ function ResumePreview({ resumeData }: { resumeData: ResumeData }) {
     setKey((prevKey) => prevKey + 1);
   }, [resumeData]);
 
+  if (resumeData.contactInfo.name === "") {
+    return (
+      <div>
+        <div className="w-full h-screen lg:h-[calc(100vh-60px)] px-[5%] bg-black/40 flex justify-center items-center">
+          <h1 className="text-xl text-center font-bold">
+            Start editing and save changes to preview your resume
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <PDFViewer
       width="100%"
       height="100%"
       key={key}
-      style={{ width: "100%" }}
-      className="h-[100vh] lg:h-full"
+      className="!h-[100vh] !w-full lg:!h-[calc(100vh-60px)]"
     >
       <ResumePDF data={resumeData} />
     </PDFViewer>

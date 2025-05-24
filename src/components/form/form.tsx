@@ -10,20 +10,16 @@ import {
   ProfessionalSummary,
   Skills,
 } from "./form.resume.items";
-import { defaultFormValues } from "@/lib/form.default";
 import { useFormStore } from "@/store/form.store";
+import { Form } from "@/components/ui/form";
 
 export default function ResumeForm() {
+  const resumeData = useFormStore((state) => state.resumeData);
   const updateResumeData = useFormStore((state) => state.updateResumeData);
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResumeFormData>({
+  const form = useForm<ResumeFormData>({
     resolver: zodResolver(resumeSchema) as Resolver<ResumeFormData>,
-    defaultValues: defaultFormValues as ResumeFormData,
+    defaultValues: resumeData,
   });
 
   const onSubmit = (data: ResumeFormData) => {
@@ -32,7 +28,7 @@ export default function ResumeForm() {
   };
 
   return (
-    <div className=" w-full lg:max-w-4xl overflow-y-auto min-h-full h-full mx-auto p-6 bg-white">
+    <div className="w-full h-full lg:max-h-[calc(100vh-60px)] overflow-y-auto flex flex-col mx-auto px-[5%] py-6 bg-white">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Resume Builder
@@ -42,27 +38,52 @@ export default function ResumeForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <ContactInformation register={register} errors={errors} />
-        <ProfessionalSummary register={register} errors={errors} />
-        <Experience register={register} control={control} errors={errors} />
-        <Education register={register} control={control} errors={errors} />
-        <Skills register={register} control={control} errors={errors} />
-        <OptionalSections
-          register={register}
-          control={control}
-          errors={errors}
-        />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-8"
+        >
+          <ContactInformation
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
+          <ProfessionalSummary
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
+          <Experience
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
+          <Education
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
+          <Skills
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
+          <OptionalSections
+            register={form.register}
+            control={form.control}
+            errors={form.formState.errors}
+          />
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="px-8 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200"
-          >
-            Generate Resume
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-8 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200"
+            >
+              Generate Resume
+            </button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

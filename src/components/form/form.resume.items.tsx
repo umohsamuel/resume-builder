@@ -1,7 +1,6 @@
 import { Plus, Trash2 } from "lucide-react";
 import { SectionHeader } from "../header/form.section.header";
 import { DynamicArrayField } from "./form.dynamic-arr-field";
-import { FormInput, FormTextarea } from "../input";
 import {
   Controller,
   useFieldArray,
@@ -10,6 +9,17 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import type { ResumeFormData } from "@/lib/form.validation";
+import {
+  awardInputs,
+  certificationInputs,
+  contactInputs,
+  educationInputs,
+  projectInputs,
+  workExperienceInputs,
+} from "@/lib/form.inputs";
+
+import { FormInputItem } from "./form.components";
+import { Button } from "../ui/button";
 
 interface BaseFormProps {
   register: UseFormRegister<ResumeFormData>;
@@ -20,75 +30,48 @@ interface FormProps extends BaseFormProps {
   control: Control<ResumeFormData>;
 }
 
-export const ContactInformation = ({ register, errors }: BaseFormProps) => {
+export const ContactInformation = ({
+  errors,
+  control,
+  register,
+}: FormProps) => {
   return (
     <section className="bg-gray-50 p-6 rounded-lg">
       <SectionHeader title="Contact Information" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormInput
-          label="Full Name"
-          required
-          {...register("contactInfo.name")}
-          error={errors.contactInfo?.name?.message}
-        />
-        <FormInput
-          label="Professional Title"
-          required
-          {...register("contactInfo.title")}
-          error={errors.contactInfo?.title?.message}
-        />
-        <FormInput
-          label="Professional Email"
-          type="email"
-          required
-          {...register("contactInfo.email")}
-          error={errors.contactInfo?.email?.message}
-        />
-        <FormInput
-          label="Phone Number"
-          required
-          {...register("contactInfo.phone")}
-          error={errors.contactInfo?.phone?.message}
-        />
-        <FormInput
-          label="City/State/Zip Code"
-          required
-          {...register("contactInfo.location")}
-          error={errors.contactInfo?.location?.message}
-        />
-        <FormInput
-          label="Website"
-          type="url"
-          {...register("contactInfo.website")}
-          error={errors.contactInfo?.website?.message}
-        />
-        <FormInput
-          type="url"
-          label="LinkedIn URL"
-          {...register("contactInfo.linkedinUrl")}
-          error={errors.contactInfo?.linkedinUrl?.message}
-        />
-        <FormInput
-          type="url"
-          label="Portfolio Link"
-          {...register("contactInfo.portfolioLink")}
-          error={errors.contactInfo?.portfolioLink?.message}
-        />
+        {contactInputs.map((input) => (
+          <FormInputItem<ResumeFormData>
+            key={input.name}
+            register={register}
+            control={control}
+            errors={errors}
+            input={input}
+          />
+        ))}
       </div>
     </section>
   );
 };
 
-export const ProfessionalSummary = ({ register, errors }: BaseFormProps) => {
+export const ProfessionalSummary = ({
+  register,
+  control,
+  errors,
+}: FormProps) => {
   return (
     <section className="bg-gray-50 p-6 rounded-lg">
       <SectionHeader title="Professional Summary" />
-      <FormTextarea
-        label="Professional Summary"
-        required
-        {...register("professionalSummary")}
-        error={errors.professionalSummary?.message}
-        placeholder="Write a compelling professional summary highlighting your key qualifications and career objectives..."
+      <FormInputItem<ResumeFormData>
+        register={register}
+        control={control}
+        errors={errors}
+        input={{
+          label: "Professional Summary",
+          type: "textarea",
+          name: "professionalSummary",
+          placeholder: "Enter Professional Summary",
+          required: true,
+        }}
       />
     </section>
   );
@@ -120,57 +103,28 @@ export const Experience = ({ register, control, errors }: FormProps) => {
               Work Experience #{index + 1}
             </h3>
             {workFields.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeWork(index)}
-                className="text-red-600 hover:text-red-800"
-              >
+              <Button type="button" onClick={() => removeWork(index)}>
                 <Trash2 size={20} />
-              </button>
+              </Button>
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <FormInput
-              label="Job Title"
-              required
-              {...register(`workExperience.${index}.position`)}
-              error={errors.workExperience?.[index]?.position?.message}
-            />
-            <FormInput
-              label="Company Name"
-              required
-              {...register(`workExperience.${index}.company`)}
-              error={errors.workExperience?.[index]?.company?.message}
-            />
-            <FormInput
-              label="Company Location"
-              required
-              {...register(`workExperience.${index}.location`)}
-              error={errors.workExperience?.[index]?.location?.message}
-            />
-            <div className="grid grid-cols-2 gap-2">
-              <FormInput
-                label="Start Date"
-                placeholder="MM/YYYY"
-                required
-                {...register(`workExperience.${index}.startDate`)}
-                error={errors.workExperience?.[index]?.startDate?.message}
+            {workExperienceInputs(index).map((input, idx) => (
+              <FormInputItem<ResumeFormData>
+                key={idx}
+                register={register}
+                control={control}
+                errors={errors}
+                input={input}
               />
-              <FormInput
-                label="End Date"
-                placeholder="MM/YYYY"
-                required
-                {...register(`workExperience.${index}.endDate`)}
-                error={errors.workExperience?.[index]?.endDate?.message}
-              />
-            </div>
+            ))}
           </div>
           <Controller
             name={`workExperience.${index}.responsibilities`}
             control={control}
             render={({ field }) => (
               <DynamicArrayField
-                label="Key Achievements & Responsibilities"
+                label="Key Achievements & Responsibilities "
                 fields={field.value.map((item: string, idx: number) => ({
                   id: `${idx}`,
                   value: item,
@@ -196,28 +150,30 @@ export const Experience = ({ register, control, errors }: FormProps) => {
                 })}
                 errors={errors.workExperience?.[index]?.responsibilities}
                 fieldName={`workExperience.${index}.responsibilities`}
-                placeholder="Describe your key achievements and responsibilities..."
+                placeholder="Describe your achievements and responsibilities."
               />
             )}
           />
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendWork({
-            position: "",
-            company: "",
-            location: "",
-            startDate: "",
-            endDate: "",
-            responsibilities: [""],
-          })
-        }
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-      >
-        <Plus size={16} /> Add Work Experience
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendWork({
+              position: "",
+              company: "",
+              location: "",
+              startDate: "",
+              endDate: "",
+              responsibilities: [""],
+            })
+          }
+          className=" px-4 py-2 h-[45px] "
+        >
+          <Plus size={16} /> Add Work Experience
+        </Button>
+      </div>
     </section>
   );
 };
@@ -246,68 +202,41 @@ export const Education = ({ register, control, errors }: FormProps) => {
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">Education #{index + 1}</h3>
             {educationFields.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeEducation(index)}
-                className="text-red-600 hover:text-red-800"
-              >
+              <Button type="button" onClick={() => removeEducation(index)}>
                 <Trash2 size={20} />
-              </button>
+              </Button>
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              label="Degree Name"
-              required
-              {...register(`education.${index}.degree`)}
-              error={errors.education?.[index]?.degree?.message}
-            />
-            <FormInput
-              label="Institution Name"
-              required
-              {...register(`education.${index}.institution`)}
-              error={errors.education?.[index]?.institution?.message}
-            />
-            <FormInput
-              label="Institution Location"
-              required
-              {...register(`education.${index}.location`)}
-              error={errors.education?.[index]?.location?.message}
-            />
-            <div className="grid grid-cols-2 gap-2">
-              <FormInput
-                label="Start Date"
-                placeholder="MM/YYYY"
-                required
-                {...register(`education.${index}.startDate`)}
-                error={errors.education?.[index]?.startDate?.message}
+            {educationInputs(index).map((input, idx) => (
+              <FormInputItem<ResumeFormData>
+                key={idx}
+                register={register}
+                control={control}
+                errors={errors}
+                input={input}
               />
-              <FormInput
-                label="End Date"
-                placeholder="MM/YYYY"
-                required
-                {...register(`education.${index}.endDate`)}
-                error={errors.education?.[index]?.endDate?.message}
-              />
-            </div>
+            ))}
           </div>
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendEducation({
-            institution: "",
-            degree: "",
-            location: "",
-            startDate: "",
-            endDate: "",
-          })
-        }
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-      >
-        <Plus size={16} /> Add Education
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendEducation({
+              institution: "",
+              degree: "",
+              location: "",
+              startDate: "",
+              endDate: "",
+            })
+          }
+          className=" px-4 py-2 h-[45px]"
+        >
+          <Plus size={16} /> Add Education
+        </Button>
+      </div>
     </section>
   );
 };
@@ -336,22 +265,22 @@ export const Skills = ({ register, control, errors }: FormProps) => {
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">Skill Category #{index + 1}</h3>
             {skillFields.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeSkill(index)}
-                className="text-red-600 hover:text-red-800"
-              >
+              <Button type="button" onClick={() => removeSkill(index)}>
                 <Trash2 size={20} />
-              </button>
+              </Button>
             )}
           </div>
           <div className="mb-4">
-            <FormInput
-              label="Category Name"
-              required
-              {...register(`skills.${index}.category`)}
-              error={errors.skills?.[index]?.category?.message}
-              placeholder="e.g., Technical Skills, Soft Skills, Languages"
+            <FormInputItem<ResumeFormData>
+              register={register}
+              control={control}
+              errors={errors}
+              input={{
+                label: "Category Name",
+                type: "text",
+                name: `skills.${index}.category`,
+                placeholder: "e.g., Technical Skills, Soft Skills, Languages",
+              }}
             />
           </div>
           <Controller
@@ -391,18 +320,20 @@ export const Skills = ({ register, control, errors }: FormProps) => {
           />
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendSkill({
-            category: "",
-            items: [""],
-          })
-        }
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-      >
-        <Plus size={16} /> Add Skill Category
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendSkill({
+              category: "",
+              items: [""],
+            })
+          }
+          className=" px-4 py-2 h-[45px]"
+        >
+          <Plus size={16} /> Add Skill Category
+        </Button>
+      </div>
     </section>
   );
 };
@@ -427,56 +358,40 @@ export const Projects = ({ register, control, errors }: FormProps) => {
         >
           <div className="flex justify-between items-center mb-4">
             <h4 className="font-medium">Project #{index + 1}</h4>
-            <button
-              type="button"
-              onClick={() => removeProject(index)}
-              className="text-red-600 hover:text-red-800"
-            >
+            <Button type="button" onClick={() => removeProject(index)}>
               <Trash2 size={16} />
-            </button>
+            </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <FormInput
-              label="Project Title"
-              {...register(`projects.${index}.title`)}
-              error={errors.projects?.[index]?.title?.message}
-            />
-            <div className="grid grid-cols-2 gap-2">
-              <FormInput
-                label="Start Date"
-                placeholder="MM/YYYY"
-                {...register(`projects.${index}.startDate`)}
-                error={errors.projects?.[index]?.startDate?.message}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            {projectInputs(index).map((input, idx) => (
+              <FormInputItem<ResumeFormData>
+                key={idx}
+                register={register}
+                control={control}
+                errors={errors}
+                input={input}
               />
-              <FormInput
-                label="End Date"
-                placeholder="MM/YYYY"
-                {...register(`projects.${index}.endDate`)}
-                error={errors.projects?.[index]?.endDate?.message}
-              />
-            </div>
+            ))}
           </div>
-          <FormTextarea
-            label="Project Description"
-            {...register(`projects.${index}.description`)}
-            error={errors.projects?.[index]?.description?.message}
-          />
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendProject({
-            title: "",
-            startDate: "",
-            endDate: "",
-            description: "",
-          })
-        }
-        className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-800"
-      >
-        <Plus size={16} /> Add Project
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendProject({
+              title: "",
+              startDate: "",
+              endDate: "",
+              description: "",
+            })
+          }
+          className=" px-3 py-2 h-[45px]"
+        >
+          <Plus size={16} /> Add Project
+        </Button>
+      </div>
     </div>
   );
 };
@@ -501,56 +416,39 @@ export const Certifications = ({ register, control, errors }: FormProps) => {
         >
           <div className="flex justify-between items-center mb-4">
             <h4 className="font-medium">Certification #{index + 1}</h4>
-            <button
-              type="button"
-              onClick={() => removeCertification(index)}
-              className="text-red-600 hover:text-red-800"
-            >
+            <Button type="button" onClick={() => removeCertification(index)}>
               <Trash2 size={16} />
-            </button>
+            </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              label="Certification Name"
-              {...register(`certifications.${index}.name`)}
-              error={errors.certifications?.[index]?.name?.message}
-            />
-            <FormInput
-              label="Issuing Organization"
-              {...register(`certifications.${index}.issuingOrganization`)}
-              error={
-                errors.certifications?.[index]?.issuingOrganization?.message
-              }
-            />
-            <FormInput
-              label="Issue Date"
-              placeholder="MM/YYYY"
-              {...register(`certifications.${index}.issueDate`)}
-              error={errors.certifications?.[index]?.issueDate?.message}
-            />
-            <FormInput
-              label="Expiration Date (Optional)"
-              placeholder="MM/YYYY"
-              {...register(`certifications.${index}.expirationDate`)}
-              error={errors.certifications?.[index]?.expirationDate?.message}
-            />
+            {certificationInputs(index).map((input, idx) => (
+              <FormInputItem<ResumeFormData>
+                key={idx}
+                register={register}
+                control={control}
+                errors={errors}
+                input={input}
+              />
+            ))}
           </div>
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendCertification({
-            name: "",
-            issuingOrganization: "",
-            issueDate: "",
-            expirationDate: "",
-          })
-        }
-        className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-800"
-      >
-        <Plus size={16} /> Add Certification
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendCertification({
+              name: "",
+              issuingOrganization: "",
+              issueDate: "",
+              expirationDate: "",
+            })
+          }
+          className="px-3 py-2 h-[45px]"
+        >
+          <Plus size={16} /> Add Certification
+        </Button>
+      </div>
     </div>
   );
 };
@@ -575,53 +473,40 @@ export const Awards = ({ register, control, errors }: FormProps) => {
         >
           <div className="flex justify-between items-center mb-4">
             <h4 className="font-medium">Award #{index + 1}</h4>
-            <button
-              type="button"
-              onClick={() => removeAward(index)}
-              className="text-red-600 hover:text-red-800"
-            >
+            <Button type="button" onClick={() => removeAward(index)}>
               <Trash2 size={16} />
-            </button>
+            </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <FormInput
-              label="Award Name"
-              {...register(`awards.${index}.name`)}
-              error={errors.awards?.[index]?.name?.message}
-            />
-            <FormInput
-              label="Issuing Organization"
-              {...register(`awards.${index}.issuingOrganization`)}
-              error={errors.awards?.[index]?.issuingOrganization?.message}
-            />
-            <FormInput
-              label="Date Received"
-              placeholder="MM/YYYY"
-              {...register(`awards.${index}.date`)}
-              error={errors.awards?.[index]?.date?.message}
-            />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            {awardInputs(index).map((input, idx) => (
+              <FormInputItem<ResumeFormData>
+                key={idx}
+                register={register}
+                control={control}
+                errors={errors}
+                input={input}
+              />
+            ))}
           </div>
-          <FormTextarea
-            label="Description (Optional)"
-            {...register(`awards.${index}.description`)}
-            error={errors.awards?.[index]?.description?.message}
-          />
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendAward({
-            name: "",
-            issuingOrganization: "",
-            date: "",
-            description: "",
-          })
-        }
-        className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-800"
-      >
-        <Plus size={16} /> Add Award
-      </button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={() =>
+            appendAward({
+              name: "",
+              issuingOrganization: "",
+              date: "",
+              description: "",
+            })
+          }
+          className=" px-3 py-2 h-[45px]"
+        >
+          <Plus size={16} /> Add Award
+        </Button>
+      </div>
     </div>
   );
 };
@@ -636,3 +521,62 @@ export const OptionalSections = ({ register, control, errors }: FormProps) => {
     </section>
   );
 };
+
+// select case
+
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+
+//  input.type === "select" ? (
+//   <FormField
+//     control={control}
+//     name={input.name as keyof ContactInputs}
+//     key={input.name}
+//     render={({ field }) => (
+//       <FormItem className="lg:col-span-2">
+//         <FormControl>
+//           <div className="flex flex-col gap-[6px] ">
+//             <label
+//               htmlFor={input.name}
+//               className="font-medium text-sm"
+//             >
+//               {(errors as Record<string, { message?: string }>)[
+//                 input.name
+//               ]?.message ? (
+//                 <span className="text-red-500">
+//                   {
+//                     (errors as Record<string, { message?: string }>)[
+//                       input.name
+//                     ]?.message
+//                   }
+//                 </span>
+//               ) : (
+//                 input.label
+//               )}
+//             </label>
+//             <Select
+//               onValueChange={field.onChange}
+//               defaultValue={field.value}
+//             >
+//               <SelectTrigger className="w-full h-[45px]">
+//                 <SelectValue placeholder={input.placeholder} />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 {input.options?.map((opt) => (
+//                   <SelectItem key={opt.value} value={opt.value}>
+//                     {opt.label}
+//                   </SelectItem>
+//                 ))}
+//               </SelectContent>
+//             </Select>
+//           </div>
+//         </FormControl>
+//       </FormItem>
+//     )}
+//   />
+// )

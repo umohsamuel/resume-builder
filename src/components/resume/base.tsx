@@ -1,11 +1,17 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Link,
+} from "@react-pdf/renderer";
 
-// Define styles
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    // fontFamily: 'Open Sans',
+    fontFamily: "Times-Roman",
     fontSize: 10,
     color: "#333",
   },
@@ -80,14 +86,19 @@ const styles = StyleSheet.create({
   },
 });
 
-// Header Component
 const Header: React.FC<{ contactInfo: ContactInfo }> = ({ contactInfo }) => (
   <View style={styles.header}>
     <Text style={styles.name}>{contactInfo.name}</Text>
     <Text style={styles.title}>{contactInfo.title}</Text>
     <View style={styles.contactInfo}>
-      <Text>
+      {/* <Text>
         {contactInfo.email} | {contactInfo.website}
+      </Text> */}
+      <Text>
+        <Link src={`mailto:${contactInfo.email}`}>Mail</Link> |{" "}
+        <Link src={contactInfo.website}>Website</Link> |{" "}
+        <Link src={contactInfo.portfolioLink}>Portfiolio</Link> |{" "}
+        <Link src={contactInfo.linkedinUrl}>LinkedIn</Link>
       </Text>
       <Text>
         {contactInfo.location} | {contactInfo.phone}
@@ -96,14 +107,12 @@ const Header: React.FC<{ contactInfo: ContactInfo }> = ({ contactInfo }) => (
   </View>
 );
 
-// Professional Summary Component
 const ProfessionalSummary: React.FC<{ summary: string }> = ({ summary }) => (
   <View style={styles.section}>
     <Text style={styles.summaryText}>{summary}</Text>
   </View>
 );
 
-// Education Component
 const EducationSection: React.FC<{ education: Education[] }> = ({
   education,
 }) => (
@@ -123,7 +132,6 @@ const EducationSection: React.FC<{ education: Education[] }> = ({
   </View>
 );
 
-// Projects Component
 const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects }) => (
   <View style={styles.section}>
     <Text style={styles.sectionTitle}>Projects</Text>
@@ -141,7 +149,6 @@ const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects }) => (
   </View>
 );
 
-// Work Experience Component
 const WorkExperienceSection: React.FC<{ workExperience: WorkExperience[] }> = ({
   workExperience,
 }) => (
@@ -169,7 +176,6 @@ const WorkExperienceSection: React.FC<{ workExperience: WorkExperience[] }> = ({
   </View>
 );
 
-// Skills Component
 const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => (
   <View style={styles.section}>
     <Text style={styles.sectionTitle}>Skills</Text>
@@ -244,186 +250,3 @@ const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
 );
 
 export default ResumePDF;
-
-// import React from "react";
-// import { Document, Page, Text, View } from "@react-pdf/renderer";
-
-// const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
-//   <Document>
-//     <Page
-//       size="A4"
-//       style={{
-//         padding: 30,
-//         fontSize: 10,
-//         // fontFamily: "",
-//         color: "#333",
-//       }}
-//     >
-//       {/* Header */}
-//       <View
-//         style={{
-//           marginBottom: 20,
-//           textAlign: "center",
-//         }}
-//       >
-//         <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 5 }}>
-//           {data.contactInfo.name}
-//         </Text>
-//         <Text style={{ fontSize: 14, marginBottom: 10 }}>
-//           {data.contactInfo.title}
-//         </Text>
-//         <View>
-//           <Text style={{ fontSize: 9, color: "#666" }}>
-//             {data.contactInfo.email} | {data.contactInfo.website}
-//           </Text>
-//           <Text style={{ fontSize: 9, color: "#666" }}>
-//             {data.contactInfo.location} | {data.contactInfo.phone}
-//           </Text>
-//         </View>
-//       </View>
-
-//       {/* Summary */}
-//       <View style={{ marginBottom: 12 }}>
-//         <Text style={{ lineHeight: 1 }}>{data.professionalSummary}</Text>
-//       </View>
-
-//       {/* Education */}
-//       <View style={{ marginBottom: 12 }}>
-//         <Text
-//           style={{
-//             fontSize: 12,
-//             fontWeight: 700,
-//             marginBottom: 6,
-//             borderBottom: "1pt solid #999",
-//             paddingBottom: 2,
-//           }}
-//         >
-//           Education
-//         </Text>
-//         {data.education.map((edu, index) => (
-//           <View key={index} style={{ marginBottom: 8 }}>
-//             <View
-//               style={{
-//                 flexDirection: "row",
-//                 justifyContent: "space-between",
-//               }}
-//             >
-//               <Text style={{ fontWeight: 600 }}>{edu.institution}</Text>
-//               <Text>
-//                 {edu.startDate} - {edu.endDate}
-//               </Text>
-//             </View>
-//             <Text style={{ fontStyle: "italic" }}>{edu.degree}</Text>
-//           </View>
-//         ))}
-//       </View>
-
-//       {/* Projects */}
-//       <View style={{ marginBottom: 12 }}>
-//         <Text
-//           style={{
-//             fontSize: 12,
-//             fontWeight: 700,
-//             marginBottom: 6,
-//             borderBottom: "1pt solid #999",
-//             paddingBottom: 2,
-//           }}
-//         >
-//           Projects
-//         </Text>
-//         {data.projects.map((project, index) => (
-//           <View key={index} style={{ marginBottom: 8 }}>
-//             <View
-//               style={{
-//                 flexDirection: "row",
-//                 justifyContent: "space-between",
-//               }}
-//             >
-//               <Text style={{ fontWeight: 600 }}>{project.title}</Text>
-//               <Text>
-//                 {project.startDate} - {project.endDate}
-//               </Text>
-//             </View>
-//             <Text>{project.description}</Text>
-//           </View>
-//         ))}
-//       </View>
-
-//       {/* Work Experience */}
-//       <View style={{ marginBottom: 12 }}>
-//         <Text
-//           style={{
-//             fontSize: 12,
-//             fontWeight: 700,
-//             marginBottom: 6,
-//             borderBottom: "1pt solid #999",
-//             paddingBottom: 2,
-//           }}
-//         >
-//           Work Experience
-//         </Text>
-//         {data.workExperience.map((work, index) => (
-//           <View key={index} style={{ marginBottom: 8 }}>
-//             <View
-//               style={{
-//                 flexDirection: "row",
-//                 justifyContent: "space-between",
-//               }}
-//             >
-//               <Text style={{ fontWeight: 600 }}>{work.position}</Text>
-//               <Text>
-//                 {work.startDate} - {work.endDate}
-//               </Text>
-//             </View>
-//             <Text style={{ fontStyle: "italic", marginBottom: 4 }}>
-//               {work.company} | {work.location}
-//             </Text>
-//             {work.responsibilities.map((res, i) => (
-//               <View
-//                 key={i}
-//                 style={{
-//                   flexDirection: "row",
-//                   marginBottom: 2,
-//                 }}
-//               >
-//                 <Text style={{ width: 10 }}>•</Text>
-//                 <Text style={{ flex: 1 }}>{res}</Text>
-//               </View>
-//             ))}
-//           </View>
-//         ))}
-//       </View>
-
-//       {/* Skills */}
-//       <View style={{ marginBottom: 12 }}>
-//         <Text
-//           style={{
-//             fontSize: 12,
-//             fontWeight: 700,
-//             marginBottom: 6,
-//             borderBottom: "1pt solid #999",
-//             paddingBottom: 2,
-//           }}
-//         >
-//           Skills
-//         </Text>
-//         {data.skills.map((skillGroup, index) => (
-//           <View key={index} style={{ marginBottom: 6 }}>
-//             <Text style={{ fontWeight: 600, marginBottom: 2 }}>
-//               {skillGroup.category}:
-//             </Text>
-//             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-//               {skillGroup.items.map((item, i) => (
-//                 <Text key={i} style={{ marginRight: 10, marginBottom: 2 }}>
-//                   {item}
-//                 </Text>
-//               ))}
-//             </View>
-//           </View>
-//         ))}
-//       </View>
-//     </Page>
-//   </Document>
-// );
-
-// export default ResumePDF;
