@@ -14,7 +14,7 @@ interface Education {
   degree: string;
   location: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
 }
 
 interface WorkExperience {
@@ -22,14 +22,14 @@ interface WorkExperience {
   company: string;
   location: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
   responsibilities: string[];
 }
 
 interface Project {
   title: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
   description: string;
 }
 
