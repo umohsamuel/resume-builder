@@ -123,7 +123,7 @@ const EducationSection: React.FC<{ education: Education[] }> = ({
         <View style={styles.row}>
           <Text style={styles.bold}>{edu.institution}</Text>
           <Text>
-            {edu.startDate} - {edu.endDate}
+            {edu.startDate} - {edu.endDate ? edu.endDate : "Present"}
           </Text>
         </View>
         <Text style={styles.italic}>{edu.degree}</Text>
@@ -140,7 +140,8 @@ const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects }) => (
         <View style={styles.row}>
           <Text style={styles.bold}>{project.title}</Text>
           <Text>
-            {project.startDate} - {project.endDate}
+            {project.startDate} -{" "}
+            {project.endDate ? project.endDate : "Present"}
           </Text>
         </View>
         <Text>{project.description}</Text>
@@ -159,7 +160,7 @@ const WorkExperienceSection: React.FC<{ workExperience: WorkExperience[] }> = ({
         <View style={styles.row}>
           <Text style={styles.bold}>{work.position}</Text>
           <Text>
-            {work.startDate} - {work.endDate}
+            {work.startDate} - {work.endDate ? work.endDate : "Present"}
           </Text>
         </View>
         <Text style={styles.italic}>
@@ -240,11 +241,15 @@ const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
       <EducationSection education={data.education} />
       <WorkExperienceSection workExperience={data.workExperience} />
       <SkillsSection skills={data.skills} />
-      {data.projects && <ProjectsSection projects={data.projects} />}
-      {data.certifications && (
+      {data.projects && data.projects.length > 0 && (
+        <ProjectsSection projects={data.projects} />
+      )}
+      {data.certifications && data.certifications.length > 0 && (
         <CertificationSection certifications={data.certifications} />
       )}
-      {data.awards && <AwardsSection awards={data.awards} />}
+      {data.awards && data.awards.length > 0 && (
+        <AwardsSection awards={data.awards} />
+      )}
     </Page>
   </Document>
 );

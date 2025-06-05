@@ -33,7 +33,7 @@ const workExperienceSchema = z.object({
   company: z.string().min(1, "Company name is required"),
   location: z.string().min(1, "Company location is required"),
   startDate: dateField,
-  endDate: dateField,
+  endDate: dateField.optional().or(z.literal("")),
   responsibilities: z
     .array(z.string().min(1, "Achievement cannot be empty"))
     .min(1, "At least one achievement is required"),
@@ -44,7 +44,7 @@ const educationSchema = z.object({
   degree: z.string().min(1, "Degree name is required"),
   location: z.string().min(1, "Institution location is required"),
   startDate: dateField,
-  endDate: dateField,
+  endDate: dateField.optional().or(z.literal("")),
 });
 
 const skillSchema = z.object({
@@ -57,7 +57,7 @@ const skillSchema = z.object({
 const projectSchema = z.object({
   title: z.string().min(1, "Project title is required"),
   startDate: dateField,
-  endDate: dateField,
+  endDate: dateField.optional().or(z.literal("")),
   description: z.string().min(1, "Project description is required"),
 });
 
