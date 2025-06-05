@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 3,
   },
   title: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 6,
   },
   contactInfo: {
     fontSize: 9,
@@ -45,6 +45,9 @@ const styles = StyleSheet.create({
   },
   subsection: {
     marginBottom: 8,
+  },
+  subSkills: {
+    marginBottom: 4,
   },
   row: {
     flexDirection: "row",
@@ -82,7 +85,10 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   summaryText: {
-    lineHeight: 1.4,
+    lineHeight: 0.9,
+  },
+  skillsContainer: {
+    marginTop: 4,
   },
 });
 
@@ -166,12 +172,15 @@ const WorkExperienceSection: React.FC<{ workExperience: WorkExperience[] }> = ({
         <Text style={styles.italic}>
           {work.company} | {work.location}
         </Text>
-        {work.responsibilities.map((responsibility, rIndex) => (
-          <View key={rIndex} style={styles.bullet}>
-            <Text style={styles.bulletPoint}>•</Text>
-            <Text style={styles.bulletText}>{responsibility}</Text>
-          </View>
-        ))}
+
+        <View style={styles.skillsContainer}>
+          {work.responsibilities.map((responsibility, rIndex) => (
+            <View key={rIndex} style={styles.bullet}>
+              <Text style={styles.bulletPoint}>•</Text>
+              <Text style={styles.bulletText}>{responsibility}</Text>
+            </View>
+          ))}
+        </View>
       </View>
     ))}
   </View>
@@ -181,7 +190,7 @@ const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => (
   <View style={styles.section}>
     <Text style={styles.sectionTitle}>Skills</Text>
     {skills.map((skillGroup, index) => (
-      <View key={index} style={styles.subsection}>
+      <View key={index} style={styles.subSkills}>
         <Text style={styles.skillCategory}>{skillGroup.category}:</Text>
         <View style={styles.skillList}>
           {skillGroup.items.map((skill, sIndex) => (
