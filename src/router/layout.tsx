@@ -11,7 +11,7 @@ export default function AppLayout() {
   return (
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
-      afterSignOutUrl="/"
+      afterSignOutUrl="/preview"
       signInUrl="/login"
       signUpUrl="/signup"
       signInFallbackRedirectUrl="/preview"
